@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>ng-repeat</title>
+	<style>
+		.box{
+			width: 200px;
+			height: 200px;
+			background: red;
+			transition: 1s all;
+		}
+		.box.ng-enter{
+			opacity: 0;
+		}
+		.box.ng-enter-active{
+			opacity: 1;
+		}
+		.box.ng-leave{
+			opacity: 1;
+		}
+		.box.ng-leave-active{
+			opacity: 0;
+		}
+	</style>
+	<script src="lib/angular.min.js"></script>
+	<script src="http://cdn.bootcss.com/angular.js/1.2.9/angular-animate.min.js"></script>
+	<script>
+		var m1 = angular.module('myApp', ['ngAnimate']);
+		m1.controller('Aaa', ['$scope', function ($scope) {
+			$scope.bBtn=true;
+		}])
+	</script>
+</head>
+
+<body>
+	<div ng-controller="Aaa">
+		<input type="checkbox" ng-model="bBtn">
+		<div ng-if="bBtn" class="box"></div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ng-repeat</title>
+    <style>
+    </style>
+    <script src="lib/angular.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular.js/1.4.8/angular-sanitize.min.js"></script>
+    <script>
+        var m1 = angular.module('myApp', ['ngSanitize']);
+        m1.controller('Aaa', ['$scope', function ($scope) {
+            $scope.text='hello';
+        }])
+    </script>
+</head>
+
+<body>
+    <div ng-controller="Aaa">
+        <!-- <div ng-bind="text"></div>
+        <div ng-bind-template="{{text}},{{text}}"></div>
+        <div ng-bind-html="text"></div> -->
+        <div ng-cloak>{{text}}</div>
+    </div>
+    <script>
+        //alert(1);
+    </script>
+</body>
+
+</html>

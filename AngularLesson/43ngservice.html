@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>ng-repeat</title>
+	<style>
+	</style>
+	<script src="lib/angular.min.js"></script>
+	<script>
+		/* var m1=angular.module('myApp',[]);
+		m1.factory('myService',function(){
+			return {
+				name:'hello',
+				show:function(){
+					return this.name+':Angular';
+				}
+			}
+		});
+		m1.factory('myRandomNum',function(){
+			return function(num1,num2){
+				return Math.random()*(num2-num1)+num1;
+			}
+		});
+		m1.controller('Aaa',['$scope','myService','myRandomNum',function($scope,myService,myRandomNum){
+			console.log(myRandomNum(-3,6));
+		}]) */
+		var m1 = angular.module('myApp', []);
+		/* m1.factory('myService', function () {
+			return {
+				name: 'hello',
+				show: function () {
+					return this.name + ':Angular';
+				}
+			}
+		}); */
+		/* m1.config(['myServiceProvider', function (myServiceProvider) {
+			myServiceProvider.name='hi';
+			console.log(myServiceProvider);
+		}])
+		m1.provider('myService', function () {
+			return {
+				name:'hello',
+				$get: function () {
+					return {
+						name: this.name,
+						show: function () {
+							return this.name + ':Angular';
+						}
+					}
+				}
+			}
+		}); */
+		/* m1.controller('Aaa', ['$scope', 'myService', function ($scope, myService) {
+			console.log(myService.show());
+		}]) */
+		m1.provider('myRandomNum', function () {
+
+			return {
+				bolInt: false,
+				int: function (argBol) {
+					if (argBol) {
+						this.bolInt = true;
+					}
+					else {
+						this.bolInt = false;
+					}
+				},
+				$get: function () {
+					var This = this;
+					return function (num1, num2) {
+						return This.bolInt ? Math.round(Math.random() * (num2 - num1)) + num1 : Math.random() * (num2 - num1) + num1;
+					};
+				}
+			};
+
+		});
+		m1.config(['myRandomNumProvider', function (myRandomNumProvider) {
+			myRandomNumProvider.int(true);
+		}])
+		m1.controller('Aaa', ['$scope', 'myRandomNum', function ($scope, myRandomNum) {
+
+			console.log(myRandomNum(-3, 6));
+
+		}]);
+	</script>
+</head>
+
+<body>
+	<div ng-controller="Aaa">
+
+	</div>
+</body>
+
+</html>

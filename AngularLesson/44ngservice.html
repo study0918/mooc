@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>ng-repeat</title>
+	<style>
+	</style>
+	<script src="lib/angular.min.js"></script>
+	<script>
+		var m1 = angular.module('module1', []);
+		m1.factory('myService', function () {
+			return {
+				name: 'hello',
+				show: function () {
+					return this.name + ':angularjs'
+				}
+			};
+		});
+		var m2 = angular.module('myApp', ['module1']);
+		m2.controller('Aaa', ['$scope', 'myService', function ($scope, myService) {
+			console.log(myService.show());
+		}]);
+	</script>
+</head>
+
+<body>
+	<div ng-controller="Aaa">
+
+	</div>
+</body>
+
+</html>

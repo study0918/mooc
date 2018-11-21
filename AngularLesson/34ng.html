@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>ng-repeat</title>
+	<style>
+	</style>
+	<script src="lib/angular.min.js"></script>
+	<script>
+		var m1 = angular.module('myApp', []);
+		m1.controller('Aaa', ['$scope', '$cacheFactory', '$log', '$interpolate', function ($scope, $cacheFactory, $log, $interpolate) {
+
+			//  $log.log('hello');
+			//  $log.info('hello');
+			//  $log.warn('hello');
+			//  $log.error('hello');
+			// var cache = $cacheFactory('myCache', { capacity: 2 });//缓存的名字，不同的缓存需要建立不同的名字
+			// cache.put('name', 'hello');
+			// cache.put('age', '20');
+			// cache.put('job', 'it');
+			// console.log(cache.info());
+			//  cache.remove('name');
+			//  console.log(cache.get('name'));
+			$scope.$watch('body',function(newBody){
+				if(newBody){
+					var temp=$interpolate(newBody);
+					$scope.showText=temp({name:$scope.name});
+				}
+			})
+		}])
+	</script>
+</head>
+
+<body>
+	<!-- <div id="parent" ng-controller="Aaa">
+		<ul>
+			<li ng-repeat="id in [1,2,3,4,5]" ng-click="change('div'+id)">{{id}}aaaaaaaaaa</li>
+		</ul>
+		<div ng-repeat="id in [1,2,3,4,5]" ng-attr-id="div{{id}}">{{id}}</div>
+	</div> -->
+	<div ng-controller="Aaa">
+		<input type="text" ng-model="name">
+		<textarea ng-model="body"></textarea>
+		<p>{{showText}}</p>
+	</div>
+</body>
+
+</html>

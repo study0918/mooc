@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ng-repeat</title>
+    <style>
+    </style>
+    <script src="lib/angular.min.js"></script>
+    <script src="https://cdn.bootcss.com/angular.js/1.4.8/angular-sanitize.min.js"></script>
+    <script>
+        var m1 = angular.module('myApp', ['ngSanitize']);
+        m1.controller('Aaa', ['$scope', function ($scope) {
+            $scope.bBtn=true;
+        }])
+    </script>
+</head>
+
+<body>
+    <div ng-controller="Aaa">
+        <input type="checkbox" ng-model="bBtn">
+        <!-- <div ng-if="bBtn">aaa</div> -->
+        <div ng-switch on="bBtn">
+            <p ng-switch-default>默认是显示的效果</p>
+            <p ng-switch-when="false">默认是隐藏的效果</p>
+        </div>
+        <details ng-open="bBtn">
+                <summary>Copyright 1999-2011.</summary>
+                <p> - by Refsnes Data. All Rights Reserved.</p>
+                <p>All content and graphics on this web site are the property of the company Refsnes Data.</p>
+                </details>
+    </div>
+    <script>
+        
+    </script>
+</body>
+
+</html>

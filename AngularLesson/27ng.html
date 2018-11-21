@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>ng-repeat</title>
+	<style>
+	</style>
+	<script src="lib/angular.min.js"></script>
+	<script>
+		var m1 = angular.module('myApp', []);
+		m1.directive('myHello',function(){
+			return {
+				restrict:'ECAM',
+				replace:true,
+				template:'<div>AngularJs</div>'
+			}
+		});
+		m1.controller('Aaa', ['$scope', function ($scope) {
+
+
+		}]);
+	</script>
+</head>
+
+<body>
+	<my-hello></my-hello>
+	<p class="my-hello"></p>
+	<div ng-controller="Aaa">
+		
+	</div>
+</body>
+
+</html>

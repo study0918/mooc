@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ng-repeat</title>
+    <style>
+        .active1{
+            background-color: brown;
+        }
+        .active2{
+            background-color: cornflowerblue
+        }
+    </style>
+    <script src="lib/angular.min.js"></script>
+    <script>
+        var m1 = angular.module('myApp', []);
+            m1.controller('Aaa', ['$scope','$filter' ,function ($scope,$filter){
+                $scope.dataList=['a','b','c','d','e'];
+            }])
+    </script>
+</head>
+<body>
+    <div ng-controller="Aaa">
+         <input type="checkbox" ng-model="aaa">
+         <select>
+             <option>111</option>
+             <option ng-selected="aaa">222</option>
+         </select>
+         <input type="text" ng-change="bbb='hello'" ng-model='bbb'>{{bbb}}<br/>
+         <input type="text" value="aas" ng-copy="ccc='true'">{{ccc}}
+         <input type="text" value="cut" ng-cut="ccc='true'">{{ccc}}
+         <input type="text" value="paste" ng-paste="ccc='true'">{{ccc}}
+    </div>
+</body>
+</html>
