@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>搜索节点</h1>
+
+    <p>对树节点进行搜索</p>
+
+    <button onclick="filerNode('特批申请','[]','name','subList')">
+      搜索
+    </button>
+    <p id="demo"></p>
+    <script>
+      var menu = [
+        {
+          name: "病案首页质控",
+          path: "/homePageQuality",
+          subList: [
+            {
+              name: "首页质控",
+              path: "/hQualityControl"
+            },
+            {
+              // 医生端复议
+              name: "首页质控问题",
+              path: "/hQualityProblem"
+            },
+            {
+              // 医生端复议
+              name: "首页质控查询",
+              path: "/hQualityQuery"
+            },
+            {
+              // 基础病案编码员首页管理
+              name: "编码员首页管理",
+              path: "/drhomeManagement"
+            },
+            {
+              // 基础病案医生首页管理
+              name: "病案首页管理",
+              path: "/homeManagement"
+            },
+            {
+              name: "撤销提交首页申请审核",
+              path: "/revokeApplication"
+            },
+            {
+              name: "问题病案特批审核",
+              path: "/specialAudit"
+            }
+          ]
+        },
+        {
+          name: "查询分析",
+          path: "",
+          subList: [
+            {
+              name: "首页质控问题汇总",
+              path: "/qcProblemSummary"
+            },
+            {
+              name: "首页质控排名",
+              path: "/qcRanking"
+            },
+            {
+              name: "首页质控问题分布",
+              path: "/qcProblemDistribution"
+            },
+            {
+              name: "首页质控趋势分析",
+              path: "/qcTrend"
+            },
+            {
+              name: "首页质控进度跟踪表",
+              path: "/qcProgressTracking"
+            },
+            {
+              name: "首页质控完整率分析",
+              path: "/qcIntegratedRate"
+            },
+            {
+              name: "首页质控工作量分析",
+              path: "/qcWorkloadAnalysis"
+            }
+          ]
+        },
+        {
+          name: "其他系统页面",
+          path: "/separatePage",
+          subList: [
+            {
+              name: "问题病案特批申请",
+              path: "/specialApplication"
+            },
+            {
+              name: "撤销提交首页申请",
+              path: "/revokeHistory"
+            }
+          ]
+        },
+        {
+          name: "无纸化pdf浏览",
+          path: "/paperlessBrowse"
+        },
+        {
+          name: "首页查询",
+          path: "/homePageQuery",
+          subList: [
+            {
+              name: "关键字查询",
+              path: "/homePageQuery/byKeyWord"
+            },
+            {
+              name: "常用查询",
+              path: "/homePageQuery/commonQuery"
+            }
+          ]
+        }
+      ];
+      var filerNode = function(queryString, menu, name, subList) {
+        if (queryString) {
+          let result = [];
+          menu.forEach(m => {
+            if (m[name].toLowerCase().indexOf(queryString.toLowerCase()) > -1) {
+              result.push(m);
+            } else {
+              if (m[subList] && m[subList].length > 0) {
+                let subResult = [],
+                  subArrayList = JSON.parse(JSON.stringify(m));
+                subResult = filerNode(queryString, menu, name, subList);
+                if (subResult.length > 0) {
+                  subArrayList[subList] = subResult;
+                  result.push(subArrayList);
+                }
+              }
+            }
+          });
+          return result;
+        } else {
+          return menu;
+        }
+      };
+    </script>
+  </body>
+</html>
