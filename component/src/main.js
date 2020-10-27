@@ -5,6 +5,9 @@ import App from './App'
 import router from './router'
 import $ from 'jquery'
 
+import eleUI from './packages/index';
+Vue.use(eleUI)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

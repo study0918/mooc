@@ -6,3 +6,4 @@ let instances = [];
 let seed = 1;
 
 const Message = function(options) {};
+export default Message;
