@@ -6,7 +6,16 @@ import configTableCol from "./tableColumn/index";
 import selectTable from "./selectTable/index";
 import Message from "./message/index.js";
 import select from "./select/index.js";
-const components = [Button, vTable, Month, configTableCol, selectTable, select];
+import tag from "./tag/index.js";
+const components = [
+  Button,
+  vTable,
+  Month,
+  configTableCol,
+  selectTable,
+  select,
+  tag
+];
 // vue.use使用时，必须要有install方法。参数就是vue。
 const install = Vue => {
   for (var key in components) {
