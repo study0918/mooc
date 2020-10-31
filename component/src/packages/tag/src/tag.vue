@@ -63,3 +63,6 @@ export default {
   }
 };
 </script>
+<style type="text/css">
+@import '../../theme-chalk/tag.css'
+</style>
