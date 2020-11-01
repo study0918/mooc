@@ -1,16 +1,16 @@
 <template>
   <div>
     <button onClick="showMessage">提示</button>
-    <el-select></el-select>
+    <!-- <el-select multiple></el-select> -->
     <el-tag>标签一</el-tag>
   </div>
 </template>
 <script>
 export default {
-  methods:{
+  methods: {
     showMessage() {
-      this.$message()
+      this.$message();
     }
   }
-}
+};
 </script>

@@ -9,7 +9,9 @@
       ref="tags"
       :style="{ 'max-width': inputWidth - 32 + 'px', width: '100%' }"
     >
-      <span v-if="collapseTags && selected.length"></span>
+      <span>
+        <el-tag :closable="!selectDisabled" :size="collapseTagSize" :hit="selected[0].hitState"></el-tag>
+      </span>
     </div>
   </div>
 </template>
@@ -17,6 +19,9 @@
 export default {
   name: "ElSelect",
   inject: {
+    elForm: {
+      default: ""
+    },
     elFormItem: {
       default: ""
     }
@@ -24,7 +29,8 @@ export default {
   props: {
     size: String,
     multiple: Boolean,
-    collapseTags: Boolean
+    collapseTags: Boolean,
+    disabled: Boolean
   },
   data() {
     return {
@@ -38,7 +44,16 @@ export default {
     },
     selectSize() {
       return this.size || this._elFormItemSize;
+    },
+    selectDisabled() {
+      return this.disabled || (this.elForm || {}).disabled;
+    },
+    collapseTagSize() {
+      return ["small", "mini"].indexOf(this.selectSize) > -1 ? "mini" : "small";
     }
   }
 };
 </script>
+<style lang="scss">
+@import "../../theme-chalk/src/select.scss";
+</style>
