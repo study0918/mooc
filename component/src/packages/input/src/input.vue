@@ -1,21 +1,20 @@
 <template>
 <div :class="[
-    type === 'textarea' ? 'el-textarea' : 'el-input',
-    inputSize ? 'el-input--' + inputSize : '',
-    {
-      'is-disabled': inputDisabled,
-      'is-exceed': inputExceed,
-      'el-input-group': $slots.prepend || $slots.append,
-      'el-input-group--append': $slots.append,
-      'el-input-group--prepend': $slots.prepend,
-      'el-input--prefix': $slots.prefix || prefixIcon,
-      'el-input--suffix': $slots.suffix || suffixIcon || clearable || showPassword
-    }
-    ]"
-    @mouseenter="hovering = true"
-    @mouseleave="hovering = false">
-
-  </div>
+  type === 'textarea' ? 'el-textarea' : 'el-input',
+  inputSize ? 'el-input--' + inputSize : '',
+  {
+    'is-disabled': inputDisabled,
+    'is-exceed': inputExceed,
+    'el-input-group': $slots.prepend || $slots.append,
+    'el-input-group--append': $slots.append,
+    'el-input-group--prepend': $slots.prepend,
+    'el-input--prefix': $slots.prefix || prefixIcon,
+    'el-input--suffix': $slots.suffix || suffixIcon || clearable || showPassword
+  }
+  ]"
+  @mouseenter="hovering = true"
+  @mouseleave="hovering = false"
+  ></div>
 </template>
 <script>
 export default {
