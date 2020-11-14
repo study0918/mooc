@@ -271,6 +271,18 @@ export default {
     },
     select() {
       this.getInput().select()
+    },
+    resizeTextarea() {
+      if(this.$isServer) return;
+      const {autoSize,type} = this;
+      if(type!=='textarea') {
+        this.textareaCalcStyle = {
+          minHeight:calcTextareaHeight(this.$refs.textarea).minHeight
+        }
+        return;
+      }
+      const minRows = autoSize.minRows;
+      const maxRows = autoSize.maxRows;
     }
   }
 };
