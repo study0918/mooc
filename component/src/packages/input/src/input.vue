@@ -179,71 +179,100 @@ export default {
     tabindex: String,
   },
   computed: {
-      _elFormItemSize() {
-        return (this.elFormItem || {}).elFormItemSize;
-      },
-      validateState() {
-        return this.elFormItem ? this.elFormItem.validateState : '';
-      },
-      needStatusIcon() {
-        return this.elForm ? this.elForm.statusIcon : false;
-      },
-      validateIcon() {
-        return {
-          validating: 'el-icon-loading',
-          success: 'el-icon-circle-check',
-          error: 'el-icon-circle-close'
-        }[this.validateState];
-      },
-      textareaStyle() {
-        return merge({}, this.textareaCalcStyle, { resize: this.resize });
-      },
-      inputSize() {
-        return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size;
-      },
-      inputDisabled() {
-        return this.disabled || (this.elForm || {}).disabled;
-      },
-      nativeInputValue() {
-        return this.value === null || this.value === undefined ? '' : String(this.value);
-      },
-      showClear() {
-        return this.clearable &&
-          !this.inputDisabled &&
-          !this.readonly &&
-          this.nativeInputValue &&
-          (this.focused || this.hovering);
-      },
-      showPwdVisible() {
-        return this.showPassword &&
-          !this.inputDisabled &&
-          !this.readonly &&
-          (!!this.nativeInputValue || this.focused);
-      },
-      isWordLimitVisible() {
-        return this.showWordLimit &&
-          this.$attrs.maxlength &&
-          (this.type === 'text' || this.type === 'textarea') &&
-          !this.inputDisabled &&
-          !this.readonly &&
-          !this.showPassword;
-      },
-      upperLimit() {
-        return this.$attrs.maxlength;
-      },
-      textLength() {
-        if (typeof this.value === 'number') {
-          return String(this.value).length;
-        }
+    _elFormItemSize() {
+      return (this.elFormItem || {}).elFormItemSize;
+    },
+    validateState() {
+      return this.elFormItem ? this.elFormItem.validateState : '';
+    },
+    needStatusIcon() {
+      return this.elForm ? this.elForm.statusIcon : false;
+    },
+    validateIcon() {
+      return {
+        validating: 'el-icon-loading',
+        success: 'el-icon-circle-check',
+        error: 'el-icon-circle-close'
+      }[this.validateState];
+    },
+    textareaStyle() {
+      return merge({}, this.textareaCalcStyle, { resize: this.resize });
+    },
+    inputSize() {
+      return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size;
+    },
+    inputDisabled() {
+      return this.disabled || (this.elForm || {}).disabled;
+    },
+    nativeInputValue() {
+      return this.value === null || this.value === undefined ? '' : String(this.value);
+    },
+    showClear() {
+      return this.clearable &&
+        !this.inputDisabled &&
+        !this.readonly &&
+        this.nativeInputValue &&
+        (this.focused || this.hovering);
+    },
+    showPwdVisible() {
+      return this.showPassword &&
+        !this.inputDisabled &&
+        !this.readonly &&
+        (!!this.nativeInputValue || this.focused);
+    },
+    isWordLimitVisible() {
+      return this.showWordLimit &&
+        this.$attrs.maxlength &&
+        (this.type === 'text' || this.type === 'textarea') &&
+        !this.inputDisabled &&
+        !this.readonly &&
+        !this.showPassword;
+    },
+    upperLimit() {
+      return this.$attrs.maxlength;
+    },
+    textLength() {
+      if (typeof this.value === 'number') {
+        return String(this.value).length;
+      }
 
-        return (this.value || '').length;
-      },
-      inputExceed() {
-        // show exceed style if length of initial value greater then maxlength
-        return this.isWordLimitVisible &&
-          (this.textLength > this.upperLimit);
+      return (this.value || '').length;
+    },
+    inputExceed() {
+      // show exceed style if length of initial value greater then maxlength
+      return this.isWordLimitVisible &&
+        (this.textLength > this.upperLimit);
+    }
+  },
+  methods:{
+    focus() {
+      this.getInput().focus();
+    },
+    blur() {
+      this.getInput().blur();
+    },
+    getMigratingConfig() {
+      return {
+        props: {
+          'icon': 'icon is removed, use suffix-icon / prefix-icon instead.',
+          'on-icon-click': 'on-icon-click is removed.'
+        },
+        events: {
+          'click': 'click is removed.'
+        }
+      };
+    },
+    handleBlur(event) {
+      this.focused=false;
+      this.$emit('blur',event);
+      if(this.validateEvent) {
+        this.dispatch('ElFormItem','el.form.blur',[this.value])
       }
     },
+    select() {
+      this.getInput().select()
+    }
+  }
 };
 </script>
 <style lang="scss">
