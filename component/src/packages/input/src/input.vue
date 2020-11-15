@@ -109,6 +109,7 @@
 <script>
 import emitter from '../../../mixins/emitter';
 import Migrating from '../../../mixins/migrating';
+import calcTextareaHeight from './calcTextareaHeight';
 import merge from '.././../../utils/merge';
 import {isKorean} from '.././../../utils/shared';
 export default {
@@ -283,7 +284,100 @@ export default {
       }
       const minRows = autoSize.minRows;
       const maxRows = autoSize.maxRows;
+    },
+    setNativeInputValue() {
+      const input = this.getInput();
+      if(!input)  return;
+      if(input.value ===this.nativeInputValue) return;
+      input.value = this.nativeInputValue;
+    },
+    handleFocus(event) {
+      this.focused = true;
+      this.$emit('focus',event);
+    },
+    handleCompositionStart(){
+      this.isComposing = true;
+    },
+    handleCompositionUpdate(event) {
+      const text = event.target.value;
+      const lastCharacter = text[text.length-1]||'';
+      this.isComposing = !isKorean(lastCharacter)
+    },
+    handleCompositionEnd(event) {
+      if(this.isComposing) {
+        this.isComposing = false;
+        this.handleInput(event);
+      }
+    },
+    handleInput(event) {
+      if(this.isComposing) return;
+      if(event.target.value === this.nativeInputValue) return;
+      this.$emit('input',event.target.value);
+      this.$nextTick(this.setNativeInputValue);
+    },
+    handleChange(event) {
+      this.$emit('change',event.target.value);
+    },
+    calcIconOffset(place) {
+      let elList = [].slice.call(this.$el.querySelectorAll(`.el-input__${place}`) || []);
+      if (!elList.length) return;
+      let el = null;
+      for (let i = 0; i < elList.length; i++) {
+        if (elList[i].parentNode === this.$el) {
+          el = elList[i];
+          break;
+        }
+      }
+      if (!el) return;
+      const pendantMap = {
+        suffix: 'append',
+        prefix: 'prepend'
+      };
+
+      const pendant = pendantMap[place];
+      if (this.$slots[pendant]) {
+        el.style.transform = `translateX(${place === 'suffix' ? '-' : ''}${this.$el.querySelector(`.el-input-group__${pendant}`).offsetWidth}px)`;
+      } else {
+        el.removeAttribute('style');
+      }
+    },
+    updateIconOffset() {
+      this.calcIconOffset('prefix');
+      this.calcIconOffset('suffix');
+    },
+    clear() {
+      this.$emit('input', '');
+      this.$emit('change', '');
+      this.$emit('clear');
+    },
+    handlePasswordVisible() {
+      this.passwordVisible = !this.passwordVisible;
+      this.focus();
+    },
+    getInput() {
+      return this.$refs.input || this.$refs.textarea;
+    },
+    getSuffixVisible() {
+      return this.$slots.suffix ||
+        this.suffixIcon ||
+        this.showClear ||
+        this.showPassword ||
+        this.isWordLimitVisible ||
+        (this.validateState && this.needStatusIcon);
     }
+  },
+  created() {
+    this.$on('inputSelect', this.select);
+  },
+
+  mounted() {
+    this.setNativeInputValue();
+    this.resizeTextarea();
+    this.updateIconOffset();
+  },
+
+  updated() {
+    this.$nextTick(this.updateIconOffset);
   }
 };
 </script>
