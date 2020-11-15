@@ -342,6 +342,9 @@ export default {
         maxRows
       );
     },
+    // setNativeInputValue why need this function ,please check the following issues
+    // see:https://www.cnblogs.com/wsk1576025821/p/10954021.html
+    // see: https://github.com/ElemeFE/element/issues/14857
     setNativeInputValue() {
       const input = this.getInput();
       if (!input) return;
