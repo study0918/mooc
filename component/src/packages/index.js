@@ -7,7 +7,8 @@ import selectTable from "./selectTable/index";
 import Message from "./message/index.js";
 import select from "./select/index.js";
 import tag from "./tag/index.js";
-import input from "./input/index.js"
+import input from "./input/index.js";
+import footer from "./footer/index.js"
 const components = [
   Button,
   vTable,
@@ -16,7 +17,8 @@ const components = [
   selectTable,
   select,
   tag,
-  input
+  input,
+  footer
 ];
 // vue.use使用时，必须要有install方法。参数就是vue。
 const install = Vue => {
