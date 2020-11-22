@@ -19,12 +19,13 @@
   >
     <i class="el-icon-loading" v-if="loading"></i>
     <i :class="icon" v-if="icon && !loading"></i>
-    <span v-if="$slot.default"><slot></slot></span>
+    <span v-if="$slots.default"><slot></slot></span>
   </button>
 </template>
 <script>
 export default {
   name: "ElButton",
+
   inject: {
     elForm: {
       default: ""
@@ -33,6 +34,7 @@ export default {
       default: ""
     }
   },
+
   props: {
     type: {
       type: String,
@@ -54,6 +56,7 @@ export default {
     round: Boolean,
     circle: Boolean
   },
+
   computed: {
     _elFormItemSize() {
       return (this.elFormItem || {}).elFormItemSize;
@@ -65,6 +68,7 @@ export default {
       return this.disabled || (this.elForm || {}).disabled;
     }
   },
+
   methods: {
     handleClick(evt) {
       this.$emit("click", evt);
@@ -73,5 +77,5 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "../../theme-chalk/src/input.scss";
+@import "../../theme-chalk/src/button.scss";
 </style>

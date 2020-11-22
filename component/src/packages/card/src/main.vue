@@ -3,7 +3,7 @@
     class="el-card"
     :class="shadow ? 'is-' + shadow + '-shadow' : 'is-always-shadow'"
   >
-    <div class="el-card__header" v-if="$slot.header || header">
+    <div class="el-card__header" v-if="$slots.header || header">
       <slot name="header">{{ header }}</slot>
     </div>
     <div class="el-card__body" :style="bodyStyle">
@@ -11,6 +11,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "ElCard",
@@ -20,6 +21,12 @@ export default {
     shadow: {
       type: String
     }
+  },
+  mounted() {
+    console.log("this", this);
   }
 };
 </script>
+<style lang="scss">
+@import "../../theme-chalk/src/card.scss";
+</style>
