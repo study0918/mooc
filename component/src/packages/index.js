@@ -11,6 +11,7 @@ import input from "./input/index.js";
 import footer from "./footer/index.js";
 import badge from "./badge/index.js";
 import card from "./card/index.js";
+import Avatar from './avatar/index.js'
 const components = [
   Button,
   vTable,
@@ -22,7 +23,8 @@ const components = [
   input,
   footer,
   badge,
-  card
+  card,
+  Avatar
 ];
 // vue.use使用时，必须要有install方法。参数就是vue。
 const install = Vue => {

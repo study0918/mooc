@@ -53,10 +53,44 @@ export default {
     handleError() {
       const { error } = this;
       const errorFlag = error ? error() : undefined;
-      if(errorFlag!==false) {
+      if (errorFlag !== false) {
         this.isImageExist = false;
       }
+    },
+    renderAvatar() {
+      const { icon, src, alt, isImageExist, srcSet, fit } = this;
+      if (isImageExist && src) {
+        return (
+          <img
+            src={src}
+            onError={this.handleError}
+            alt={alt}
+            srcSet={srcSet}
+            style={{ "object-fit": fit }}
+          ></img>
+        );
+      }
+      if (icon) {
+        return <i class={icon} />;
+      }
+      return this.$slot.default;
     }
+  },
+  render() {
+    const { avatarClass, size } = this;
+    const sizeStyle =
+      typeof size === " number"
+        ? {
+            height: `${size}px`,
+            width: `${size}px`,
+            lineHeight: `${size}px`
+          }
+        : {};
+    return (
+      <span class={avatarClass} style={sizeStyle}>
+        {this.renderAvatar()}
+      </span>
+    );
   }
 };
 </script>
