@@ -1,19 +1,18 @@
 <template>
-  <footer class="el-footer" :style="{height}">
+  <footer class="el-footer" :style="{ height }">
     <slot></slot>
   </footer>
 </template>
 <script>
 export default {
-  name:"ElFooter",
-  componentName:"ElFooter",
-  props:{
-    height:String,
-    default:'60px'
+  name: "ElFooter",
+  componentName: "ElFooter",
+  props: {
+    height: String,
+    default: "60px"
   }
-}
+};
 </script>
 <style lang="scss">
 @import "../../theme-chalk/src/footer.scss";
 </style>
-

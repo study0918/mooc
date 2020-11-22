@@ -1,3 +1,4 @@
+// https://segmentfault.com/a/1190000014213030?utm_source=index-hottest
 import Vue from "vue";
 import { on } from "./dom";
 
@@ -7,14 +8,15 @@ const ctx = "@@clickoutsideContext";
 let startClick;
 let seed = 0;
 
-!Vue.prototype.$isServer && on(document, "mousedown", (e) => (startClick = e));
+!Vue.prototype.$isServer && on(document, "mousedown", e => (startClick = e));
+
 !Vue.prototype.$isServer &&
-  on(document, "mouseup", (e) => {
-    nodeList.forEach((node) => node[ctx].documentHandler(e, startClick));
+  on(document, "mouseup", e => {
+    nodeList.forEach(node => node[ctx].documentHandler(e, startClick));
   });
 
 function createDocumentHandler(el, binding, vnode) {
-  return function (mouseup = {}, mousedown = {}) {
+  return function(mouseup = {}, mousedown = {}) {
     if (
       !vnode ||
       !vnode.context ||
@@ -28,6 +30,7 @@ function createDocumentHandler(el, binding, vnode) {
           vnode.context.popperElm.contains(mousedown.target)))
     )
       return;
+
     if (
       binding.expression &&
       el[ctx].methodName &&
@@ -40,6 +43,14 @@ function createDocumentHandler(el, binding, vnode) {
   };
 }
 
+/**
+ * v-clickoutside
+ * @desc 点击元素外面才会触发的事件
+ * @example
+ * ```vue
+ * <div v-element-clickoutside="handleClose">
+ * ```
+ */
 export default {
   bind(el, binding, vnode) {
     nodeList.push(el);
@@ -48,16 +59,19 @@ export default {
       id,
       documentHandler: createDocumentHandler(el, binding, vnode),
       methodName: binding.expression,
-      bindingFn: binding.value,
+      bindingFn: binding.value
     };
   },
+
   update(el, binding, vnode) {
     el[ctx].documentHandler = createDocumentHandler(el, binding, vnode);
     el[ctx].methodName = binding.expression;
     el[ctx].bindingFn = binding.value;
   },
+
   unbind(el) {
     let len = nodeList.length;
+
     for (let i = 0; i < len; i++) {
       if (nodeList[i][ctx].id === el[ctx].id) {
         nodeList.splice(i, 1);
@@ -65,5 +79,5 @@ export default {
       }
     }
     delete el[ctx];
-  },
+  }
 };

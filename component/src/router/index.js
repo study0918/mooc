@@ -3,6 +3,7 @@ import Router from "vue-router";
 import message from "../examples/message.vue";
 import input from "../examples/input.vue";
 import card from "../examples/card.vue";
+import clickoutside from "../examples/clickoutside.vue";
 
 Vue.use(Router);
 
@@ -22,6 +23,11 @@ export default new Router({
       path: "/card",
       name: "card",
       component: card
+    },
+    {
+      path: "/clickoutside",
+      name: "clickoutside",
+      component: clickoutside
     }
   ]
 });
