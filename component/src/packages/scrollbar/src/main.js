@@ -29,4 +29,27 @@ export default {
       moveY: 0,
     };
   },
+  computed() {
+    wrap() {
+      return this.$refs.wrap;
+    }
+  },
+  render(h) {
+    let gutter=scrollbarWidth() ;
+    let style = this.wrapStyle;
+
+    if(gutter) {
+      const gutterWidth = `-${gutter}px`;
+      const gutterStyle = `margin-bottom:${gutterWidth};margin-right:${gutterWidth};`;
+
+      if(Array.isArray(this.wrapStyle)) {
+        style = toObject(this.wrapStyle);
+        style.marginRight = style.marginBottom = gutterWidth;
+      }else if(typeof this.wrapStyle==='string') {
+        style+=gutterStyle;
+      }else {
+        style=gutterStyle;
+      }
+    }
+  }
 };
