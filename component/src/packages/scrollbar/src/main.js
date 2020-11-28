@@ -128,3 +128,4 @@ export default {
     !this.noresize && removeResizeListener(this.$refs.resize, this.update);
   }
 };
+

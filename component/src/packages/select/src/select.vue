@@ -57,9 +57,75 @@
       :style="{ 'flex-grow': '1', width: inputLength / (inputWidth - 32) + '%', 'max-width': inputWidth - 42 + 'px' }"
       ref="input"></input>
     </div>
+    <el-input
+      ref="reference"
+      v-model="selectedLabel"
+      type="text"
+      :placeholder="currentPlaceholder"
+      :name="name"
+      :id="id"
+      :autocomplete="autoComplete || autocomplete"
+      :size="selectSize"
+      :disabled="selectDisabled"
+      :readonly="readonly"
+      :validate-event="false"
+      :class="{ 'is-focus': visible }"
+      :tabindex="(multiple && filterable) ? '-1' : null"
+      @focus="handleFocus"
+      @blur="handleBlur"
+      @keyup.native="debouncedOnInputChange"
+      @keydown.native.down.stop.prevent="navigateOptions('next')"
+      @keydown.native.up.stop.prevent="navigateOptions('prev')"
+      @keydown.native.enter.prevent="selectOption"
+      @keydown.native.esc.stop.prevent="visible = false"
+      @keydown.native.tab="visible = false"
+      @paste.native="debouncedOnInputChange"
+      @mouseenter.native="inputHovering = true"
+      @mouseleave.native="inputHovering = false">
+      <template slot="prefix" v-if="$slots.prefix">
+        <slot name="prefix"></slot>
+      </template>
+      <template slot="suffix">
+        <i v-show="!showClose" :class="['el-select__caret', 'el-input__icon', 'el-icon-' + iconClass]"></i>
+        <i v-if="showClose" class="el-select__caret el-input__icon el-icon-circle-close" @click="handleClearClick"></i>
+      </template>
+    </el-input>
+    <transition
+      name="el-zoom-in-top"
+      @before-enter="handleMenuEnter"
+      @after-leave="doDestroy">
+      <el-select-menu
+        ref="popper"
+        :append-to-body="popperAppendToBody"
+        v-show="visible && emptyText !== false">
+        <el-scrollbar
+          tag="ul"
+          wrap-class="el-select-dropdown__wrap"
+          view-class="el-select-dropdown__list"
+          ref="scrollbar"
+          :class="{ 'is-empty': !allowCreate && query && filteredOptionsCount === 0 }"
+          v-show="options.length > 0 && !loading">
+          <el-option
+            :value="query"
+            created
+            v-if="showNewOption">
+          </el-option>
+          <slot></slot>
+        </el-scrollbar>
+        <template v-if="emptyText && (!allowCreate || loading || (allowCreate && options.length === 0 ))">
+          <slot name="empty" v-if="$slots.empty"></slot>
+          <p class="el-select-dropdown__empty" v-else>
+            {{ emptyText }}
+          </p>
+        </template>
+      </el-select-menu>
+    </transition>
   </div>
 </template>
 <script>
+import Emitter from '../../../mixins/emitter'
+import Focus from '../../../mixins/focus'
+import Locale from '../../../mixins/locale'
 import { getValueByPath } from "../../../utils/util";
 import NavigationMixin from './navigation-mixin';
 export default {
