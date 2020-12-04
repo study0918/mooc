@@ -126,6 +126,9 @@
 import Emitter from '../../../mixins/emitter'
 import Focus from '../../../mixins/focus'
 import Locale from '../../../mixins/locale'
+import ElInput from '../../../packages/input'
+import ElSelectMenu from './select-dropdown.vue';
+import ElOption from './option.vue';
 import { getValueByPath } from "../../../utils/util";
 import NavigationMixin from './navigation-mixin';
 export default {
