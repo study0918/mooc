@@ -223,7 +223,22 @@ export default {
 
   directives: { Clickoutside },
   props: {
+    name:String,
+    id:String,
+    value:{
+      required:true
+    },
+    autocomplete:{
+      type:String,
+      default:'off'
+    },
+    automaticDropdown:false,
     size: String,
+    disabled:Boolean,
+    clearable:Boolean,
+    filterable:Boolean,
+    allowCreate:Boolean,
+    loading:Boolean,
     multiple: Boolean,
     collapseTags: Boolean,
     disabled: Boolean,
