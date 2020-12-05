@@ -16,7 +16,8 @@
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "resize-observer-polyfill": "^1.5.0",
-    "deepmerge": "^1.2.0"
+    "deepmerge": "^1.2.0",
+    "throttle-debounce": "^1.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

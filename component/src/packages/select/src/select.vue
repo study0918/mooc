@@ -129,11 +129,19 @@ import Locale from '../../../mixins/locale'
 import ElInput from '../../../packages/input'
 import ElSelectMenu from './select-dropdown.vue';
 import ElOption from './option.vue';
-import { getValueByPath } from "../../../utils/util";
+import ElTag from '../../../packages/tag'
+import ElScrollbar from '../../../packages/scrollbar'
+import debounce from 'throttle-debounce/debounce';
+import Clickoutside from '../../../utils/clickoutside';
+import { addResizeListener, removeResizeListener } from '../../../utils/resize-event';
+import {t} from '../../../locale'
+import { getValueByPath, valueEquals, isIE, isEdge } from "../../../utils/util";
 import NavigationMixin from './navigation-mixin';
+import { isKorean } from '../../../utils/shared';
 export default {
-  mixins: [NavigationMixin],
+  mixins: [Emitter, Locale, Focus('reference'), NavigationMixin],
   name: "ElSelect",
+  componentName: 'ElSelect',
   inject: {
     elForm: {
       default: ""
@@ -142,6 +150,78 @@ export default {
       default: ""
     }
   },
+  provide() {
+    return {
+      'select': this
+    };
+  },
+  computed: {
+    _elFormItemSize() {
+      return (this.elFormItem || {}).elFormItemSize;
+    },
+    readonly() {
+      return !this.filterable || this.multiple || (!isIE() && !isEdge() && !this.visible);
+    },
+    showClose() {
+      let hasValue = this.multiple
+        ? Array.isArray(this.value) && this.value.length > 0
+        : this.value !== undefined && this.value !== null && this.value !== '';
+      let criteria = this.clearable &&
+        !this.selectDisabled &&
+        this.inputHovering &&
+        hasValue;
+      return criteria;
+    },
+    iconClass() {
+      return this.remote && this.filterable ? '' : (this.visible ? 'arrow-up is-reverse' : 'arrow-up');
+    },
+
+    debounce() {
+      return this.remote ? 300 : 0;
+    },
+    emptyText() {
+      if (this.loading) {
+        return this.loadingText || this.t('el.select.loading');
+      } else {
+        if (this.remote && this.query === '' && this.options.length === 0) return false;
+        if (this.filterable && this.query && this.options.length > 0 && this.filteredOptionsCount === 0) {
+          return this.noMatchText || this.t('el.select.noMatch');
+        }
+        if (this.options.length === 0) {
+          return this.noDataText || this.t('el.select.noData');
+        }
+      }
+      return null;
+    },
+    showNewOption() {
+      let hasExistingOption = this.options.filter(option => !option.created)
+        .some(option => option.currentLabel === this.query);
+      return this.filterable && this.allowCreate && this.query !== '' && !hasExistingOption;
+    },
+
+    selectSize() {
+      return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size;
+    },
+
+    selectDisabled() {
+      return this.disabled || (this.elForm || {}).disabled;
+    },
+
+    collapseTagSize() {
+      return ['small', 'mini'].indexOf(this.selectSize) > -1
+        ? 'mini'
+        : 'small';
+    }
+  },
+  components: {
+    ElInput,
+    ElSelectMenu,
+    ElOption,
+    ElTag,
+    ElScrollbar
+  },
+
+  directives: { Clickoutside },
   props: {
     size: String,
     multiple: Boolean,
@@ -161,20 +241,7 @@ export default {
       filterable:""
     };
   },
-  computed: {
-    _elFormItemSize() {
-      return (this.elFormItem || {}).elFormItemSize;
-    },
-    selectSize() {
-      return this.size || this._elFormItemSize;
-    },
-    selectDisabled() {
-      return this.disabled || (this.elForm || {}).disabled;
-    },
-    collapseTagSize() {
-      return ["small", "mini"].indexOf(this.selectSize) > -1 ? "mini" : "small";
-    }
-  },
+
   methods: {
     deleteTag(event, tag) {},
     resetInputHeight() {},
