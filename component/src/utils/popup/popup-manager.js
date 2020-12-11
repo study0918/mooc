@@ -31,7 +31,7 @@ const PopupManager = {
     return instances[id];
   },
   register: function(id, instance) {
-    if (id && instance) { 4
+    if (id && instance) { 
       instances[id] = instance;
     }
   },
