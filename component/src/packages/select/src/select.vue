@@ -223,40 +223,90 @@ export default {
 
   directives: { Clickoutside },
   props: {
-    name:String,
-    id:String,
-    value:{
-      required:true
+    name: String,
+    id: String,
+    value: {
+      required: true
     },
-    autocomplete:{
-      type:String,
-      default:'off'
+    autocomplete: {
+      type: String,
+      default: 'off'
     },
-    automaticDropdown:false,
+    /** @Deprecated in next major version */
+    autoComplete: {
+      type: String,
+      validator(val) {
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('[Element Warn][Select]\'auto-complete\' property will be deprecated in next major version. please use \'autocomplete\' instead.');
+        return true;
+      }
+    },
+    automaticDropdown: Boolean,
     size: String,
-    disabled:Boolean,
-    clearable:Boolean,
-    filterable:Boolean,
-    allowCreate:Boolean,
-    loading:Boolean,
-    multiple: Boolean,
-    collapseTags: Boolean,
     disabled: Boolean,
+    clearable: Boolean,
+    filterable: Boolean,
+    allowCreate: Boolean,
+    loading: Boolean,
+    popperClass: String,
+    remote: Boolean,
+    loadingText: String,
+    noMatchText: String,
+    noDataText: String,
+    remoteMethod: Function,
+    filterMethod: Function,
+    multiple: Boolean,
+    multipleLimit: {
+      type: Number,
+      default: 0
+    },
+    placeholder: {
+      type: String,
+      default() {
+        return t('el.select.placeholder');
+      }
+    },
+    defaultFirstOption: Boolean,
+    reserveKeyword: Boolean,
     valueKey: {
       type: String,
-      default: "value"
+      default: 'value'
+    },
+    collapseTags: Boolean,
+    popperAppendToBody: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      inputWidth: 0,
+      options: [],
+      cachedOptions: [],
+      createdLabel: null,
+      createdSelected: false,
       selected: this.multiple ? [] : {},
+      inputLength: 20,
+      inputWidth: 0,
+      initialInputHeight: 0,
+      cachedPlaceHolder: '',
+      optionsCount: 0,
+      filteredOptionsCount: 0,
+      visible: false,
       softFocus: false,
-      query:"",
-      filterable:""
+      selectedLabel: '',
+      hoverIndex: -1,
+      query: '',
+      previousQuery: null,
+      inputHovering: false,
+      currentPlaceholder: '',
+      menuVisibleOnFocus: false,
+      isOnComposition: false,
+      isSilentBlur: false
     };
   },
-
+  watch:{
+    
+  },
   methods: {
     deleteTag(event, tag) {},
     resetInputHeight() {},
