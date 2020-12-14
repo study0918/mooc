@@ -305,7 +305,35 @@ export default {
     };
   },
   watch:{
-    
+    selectDisabled() {
+      this.$nextTick(() => {
+        this.resetInputHeight();
+      });
+    },
+    placeholder(val) {
+      this.cachedPlaceHolder = this.currentPlaceholder = val;
+    },
+    value(val,oldVal) {
+      if (this.multiple) {
+        this.resetInputHeight();
+        if ((val && val.length > 0) || (this.$refs.input && this.query !== '')) {
+          this.currentPlaceholder = '';
+        } else {
+          this.currentPlaceholder = this.cachedPlaceHolder;
+        }
+        if (this.filterable && !this.reserveKeyword) {
+          this.query = '';
+          this.handleQueryChange(this.query);
+        }
+      }
+      this.setSelected();
+      if (this.filterable && !this.multiple) {
+        this.inputLength = 20;
+      }
+      if (!valueEquals(val, oldVal)) {
+        this.dispatch('ElFormItem', 'el.form.change', val);
+      }
+    }
   },
   methods: {
     deleteTag(event, tag) {},
