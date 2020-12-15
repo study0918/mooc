@@ -333,7 +333,62 @@ export default {
       if (!valueEquals(val, oldVal)) {
         this.dispatch('ElFormItem', 'el.form.change', val);
       }
-    }
+    },
+    visible(val) {
+      if(!val) {
+        this.broadcast('ElSelectDropdown', 'destroyPopper');
+        if(this.$refs.input) {
+          this.$refs.input.blur()
+        }
+        this.query='';
+        this.previousQuery = null;
+        this.selectedLabel = '';
+        this.inputLength = 20;
+        this.menuVisibleOnFocus = false;
+        this.resetHoverIndex();
+        this.$nextTick(()=>{
+          if (this.$refs.input &&
+            this.$refs.input.value === '' &&
+            this.selected.length === 0) {
+            this.currentPlaceholder = this.cachedPlaceHolder;
+          }
+        });
+        if(!this.multiple) {
+          if (this.selected) {
+            if(this.filterable && this.allowCreate && this.createdSelected && this.createdLabel) {
+              this.selectedLabel = this.createdLabel;
+            }else {
+              this.selectedLabel = this.selected.currentLabel;
+            }
+            if (this.filterable) this.query = this.selectedLabel;
+          }
+          if (this.filterable) {
+            this.currentPlaceholder = this.cachedPlaceHolder;
+          }
+        }
+      }else {
+        this.broadcast('ElSelectDropdown', 'updatePopper');
+        if (this.filterable) {
+          this.query = this.remote ? '' : this.selectedLabel;
+          this.handleQueryChange(this.query);
+          if (this.multiple) {
+            this.$refs.input.focus();
+          } else {
+            if (!this.remote) {
+              this.broadcast('ElOption', 'queryChange', '');
+              this.broadcast('ElOptionGroup', 'queryChange');
+            }
+
+            if (this.selectedLabel) {
+              this.currentPlaceholder = this.selectedLabel;
+              this.selectedLabel = '';
+            }
+          }
+        }
+      }
+      this.$emit('visible-change', val);
+    },
+    options(){}
   },
   methods: {
     deleteTag(event, tag) {},
