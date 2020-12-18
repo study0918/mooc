@@ -363,7 +363,106 @@ export default {
       }
     },
     handleQueryChange(val) {
-      
+      if(this.previousQuery === val || this.isOnComposition) return;
+      if(this.previousQuery===null&&(typeof this.filterMethod==='function'||typeof this.remoteMethod==='function')) {
+        this.previousQuery = val;
+        return;
+      }
+      this.previousQuery =val;
+      this.$nextTick(()=>{
+        if(this.visible) this.broadcast('ElSelectDropdown', 'updatePopper');
+      });
+      this.hoverIndex = -1;
+      if (this.multiple && this.filterable) {
+        this.$nextTick(() => {
+          const length = this.$refs.input.value.length * 15 + 20;
+          this.inputLength = this.collapseTags ? Math.min(50, length) : length;
+          this.managePlaceholder();
+          this.resetInputHeight();
+        });
+      }
+      if (this.remote && typeof this.remoteMethod === 'function') {
+        this.hoverIndex = -1;
+        this.remoteMethod(val);
+      } else if (typeof this.filterMethod === 'function') {
+        this.filterMethod(val);
+        this.broadcast('ElOptionGroup', 'queryChange');
+      } else {
+        this.filteredOptionsCount = this.optionsCount;
+        this.broadcast('ElOption', 'queryChange', val);
+        this.broadcast('ElOptionGroup', 'queryChange');
+      }
+      if (this.defaultFirstOption && (this.filterable || this.remote) && this.filteredOptionsCount) {
+        this.checkDefaultFirstOption();
+      }
+    },
+    scrollToOption(option) {
+      const target = Array.isArray(option) && option[0]?option[0].$el:option.$el;
+      if(this.$refs.popper&&target) {
+        const menu = this.$refs.popper.$el.querySelector('.el-select-dropdown__wrap');
+        scrollIntoView(menu,target);
+      }
+      this.$refs.scrollbar && this.$refs.scrollbar.handleScroll();
+    },
+    handleMenuEnter() {
+      this.$nextTick(() => this.scrollToOption(this.selected));
+    },
+    emitChange(val) {
+      if(!valueEquals(this.value,val)) {
+        this.$emit('change',val);
+      }
+    },
+    getOption(value) {
+      let option;
+      const isObject = Object.prototype.toString.call(value).toLowerCase()==='[object object]';
+      const isNull = Object.prototype.toString.call(value).toLowerCase() === '[object null]';
+      const isUndefined = Object.prototype.toString.call(value).toLowerCase() === '[object undefined]';
+      for (let i = this.cachedOptions.length - 1; i >= 0; i--) {
+        const cachedOption = this.cachedOptions[i];
+        const isEqual = isObject
+          ? getValueByPath(cachedOption.value, this.valueKey) === getValueByPath(value, this.valueKey)
+          : cachedOption.value === value;
+        if (isEqual) {
+          option = cachedOption;
+          break;
+        }
+      }
+      if (option) return option;
+      const label = (!isObject && !isNull && !isUndefined)
+        ? value : '';
+      let newOption = {
+        value: value,
+        currentLabel: label
+      };
+      if (this.multiple) {
+        newOption.hitState = false;
+      }
+      return newOption;
+    },
+    setSelected() {
+      if(!this.multiple) {
+        let option = this.getOption(this.value);
+        if(option.created) {
+          this.createdLabel = option.currentLabel;
+          this.createdSelected = true;
+        }else {
+          this.createdSelected = false;
+        }
+      }
+      this.selectedLabel = option.currentLabel;
+      this.selected = option;
+      if (this.filterable) this.query = this.selectedLabel;
+      return;
+      let result = [];
+      if (Array.isArray(this.value)) {
+        this.value.forEach(value => {
+          result.push(this.getOption(value));
+        });
+      }
+      this.selected = result;
+      this.$nextTick(() => {
+        this.resetInputHeight();
+      });
     },
     deleteTag(event, tag) {},
     resetInputHeight() {},
