@@ -6,6 +6,7 @@ import configTableCol from "./tableColumn/index";
 import selectTable from "./selectTable/index";
 import Message from "./message/index.js";
 import select from "./select/index.js";
+import Option from './option/index.js'
 import tag from "./tag/index.js";
 import input from "./input/index.js";
 import footer from "./footer/index.js";
@@ -18,6 +19,7 @@ const components = [
   Month,
   configTableCol,
   selectTable,
+  Option,
   select,
   tag,
   input,

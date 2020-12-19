@@ -334,6 +334,62 @@ export default {
         this.dispatch('ElFormItem', 'el.form.change', val);
       }
     },
+    visible(val) {
+      if (!val) {
+        this.broadcast('ElSelectDropdown', 'destroyPopper');
+        if (this.$refs.input) {
+          this.$refs.input.blur();
+        }
+        this.query = '';
+        this.previousQuery = null;
+        this.selectedLabel = '';
+        this.inputLength = 20;
+        this.menuVisibleOnFocus = false;
+        this.resetHoverIndex();
+        this.$nextTick(() => {
+          if (this.$refs.input &&
+            this.$refs.input.value === '' &&
+            this.selected.length === 0) {
+            this.currentPlaceholder = this.cachedPlaceHolder;
+          }
+        });
+        if (!this.multiple) {
+          if (this.selected) {
+            if (this.filterable && this.allowCreate &&
+              this.createdSelected && this.createdLabel) {
+              this.selectedLabel = this.createdLabel;
+            } else {
+              this.selectedLabel = this.selected.currentLabel;
+            }
+            if (this.filterable) this.query = this.selectedLabel;
+          }
+
+          if (this.filterable) {
+            this.currentPlaceholder = this.cachedPlaceHolder;
+          }
+        }
+      } else {
+        this.broadcast('ElSelectDropdown', 'updatePopper');
+        if (this.filterable) {
+          this.query = this.remote ? '' : this.selectedLabel;
+          this.handleQueryChange(this.query);
+          if (this.multiple) {
+            this.$refs.input.focus();
+          } else {
+            if (!this.remote) {
+              this.broadcast('ElOption', 'queryChange', '');
+              this.broadcast('ElOptionGroup', 'queryChange');
+            }
+
+            if (this.selectedLabel) {
+              this.currentPlaceholder = this.selectedLabel;
+              this.selectedLabel = '';
+            }
+          }
+        }
+      }
+      this.$emit('visible-change', val);
+    },
     options() {
       if (this.$isServer) return;
       this.$nextTick(() => {
@@ -414,9 +470,10 @@ export default {
     },
     getOption(value) {
       let option;
-      const isObject = Object.prototype.toString.call(value).toLowerCase()==='[object object]';
+      const isObject = Object.prototype.toString.call(value).toLowerCase() === '[object object]';
       const isNull = Object.prototype.toString.call(value).toLowerCase() === '[object null]';
       const isUndefined = Object.prototype.toString.call(value).toLowerCase() === '[object undefined]';
+
       for (let i = this.cachedOptions.length - 1; i >= 0; i--) {
         const cachedOption = this.cachedOptions[i];
         const isEqual = isObject
@@ -450,6 +507,7 @@ export default {
         }
       }
       this.selectedLabel = option.currentLabel;
+
       this.selected = option;
       if (this.filterable) this.query = this.selectedLabel;
       return;
@@ -674,6 +732,7 @@ export default {
 
     checkDefaultFirstOption() {
       this.hoverIndex = -1;
+      // highlight the created option
       let hasCreated = false;
       for(let i=this.options.length-1;i>=0;i--) {
         if(this.options[i].created) {
@@ -684,13 +743,15 @@ export default {
       }
       if(hasCreated) return;
       for(let i=0;i!==this.options.length;++i) {
-        const options = this.options[i];
+        const option = this.options[i];
         if(this.query) {
+          // highlight first options that passes the filter
           if(!option.disabled && !options.groupDisabled&&option.visible) {
             this.hoverIndex =i;
             break;
           }
         }else {
+          // highlight currently selected option
           if(option.itemSelected) {
             this.hoverIndex =i;
             break;
@@ -727,10 +788,11 @@ export default {
     this.$on('setSelected', this.setSelected);
   },
   mounted() {
-    if(this.multiple && Array.isArray(this.value)&&this.value.length>0) {
-      this.currentPlaceholder='';
+    if (this.multiple && Array.isArray(this.value) && this.value.length > 0) {
+      this.currentPlaceholder = '';
     }
-    addResizeListener(this.$el,this.handleResize);
+    addResizeListener(this.$el, this.handleResize);
+
     const reference = this.$refs.reference;
     if (reference && reference.$el) {
       const sizeMap = {
@@ -740,16 +802,16 @@ export default {
       };
       const input = reference.$el.querySelector('input');
       this.initialInputHeight = input.getBoundingClientRect().height || sizeMap[this.selectSize];
-      if (this.remote && this.multiple) {
-        this.resetInputHeight();
-      }
-      this.$nextTick(() => {
-        if (reference && reference.$el) {
-          this.inputWidth = reference.$el.getBoundingClientRect().width;
-        }
-      });
-      this.setSelected();
     }
+    if (this.remote && this.multiple) {
+      this.resetInputHeight();
+    }
+    this.$nextTick(() => {
+      if (reference && reference.$el) {
+        this.inputWidth = reference.$el.getBoundingClientRect().width;
+      }
+    });
+    this.setSelected();
   },
   beforeDestroy() {
     if (this.$el && this.handleResize) removeResizeListener(this.$el, this.handleResize);
