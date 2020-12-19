@@ -464,30 +464,295 @@ export default {
         this.resetInputHeight();
       });
     },
-    deleteTag(event, tag) {},
-    resetInputHeight() {},
+    handleFocus(event) {
+      if(!this.softFocus) {
+        if (this.automaticDropdown || this.filterable) {
+          this.visible = true;
+          if (this.filterable) {
+            this.menuVisibleOnFocus = true;
+          }
+        }
+        this.$emit('focus', event);
+      }else {
+        this.softFocus = false;
+      }
+    },
+    blur() {
+      this.visible = false;
+      this.$refs.reference.blur();
+    },
+    handleBlur(event) {
+      setTimeout(()=>{
+        if(this.isSilentBlur) {
+          this.isSilentBlur = false;
+        }else {
+          this.$emit('blur',event);
+        }
+      },50)
+      this.softFocus = false;
+    },
+    handleClearClick(event) {
+      this.deleteSelected(event);
+    },
+    doDestroy() {
+      this.$refs.popper && this.$refs.popper.doDestroy();
+    },
+    handleClose() {
+      this.visible = false;
+    },
+    toggleLastOptionHitState(hit) {
+      if(!Array.isArray(this.selected)) return;
+      const option = this.selected[this.selected.length-1];
+      if(!option) return;
+      if(hit === true || hit===false) {
+        option.hitState = hit;
+        return hit;
+      }
+      option.hitState = !option.hitState;
+      return option.hitState;
+    },
+    deletePrevTag(e) {
+      if (e.target.value.length <= 0 && !this.toggleLastOptionHitState()) {
+        const value = this.value.slice();
+        value.pop();
+        this.$emit('input', value);
+        this.emitChange(value);
+      }
+    },
+    managePlaceholder() {
+      if (this.currentPlaceholder !== '') {
+        this.currentPlaceholder = this.$refs.input.value ? '' : this.cachedPlaceHolder;
+      }
+    },
+    resetInputState(e) {
+      if (e.keyCode !== 8) this.toggleLastOptionHitState(false);
+      this.inputLength = this.$refs.input.value.length * 15 + 20;
+      this.resetInputHeight();
+    },
+    resetInputHeight() {
+      if(this.collapseTags &&!this.filterable) return;
+      this.$nextTick(()=>{
+        if(!this.$refs.reference) return
+        let inputChildNodes = this.$refs.reference.$el.childNodes;
+        let input = [].filter.call(inputChildNodes,item=>item.tagName === 'INPUT')[0];
+        const tags = this.$refs.tags;
+        const sizeInMap = this.initialInputHeight || 40;
+        input.style.height = this.selected.length === 0 ? sizeInMap + 'px':Math.max(tags?(tags.clientHeight+(tags.clientHeight>sizeInMap?6:0)):0,sizeInMap) + 'px';
+        if(this.visible && this.emptyText !== false) {
+          this.broadcast('ElSelectDropdown', 'updatePopper');
+        }
+      })
+    },
+    resetHoverIndex() {
+      setTimeout(()=>{
+        if(!this.multiple) {
+          this.hoverIndex = this.options.indexOf(this.selected);
+        }else {
+          if(this.selected.length>0){
+            this.hoverIndex = Math.min.apply(null,this.selected.map(item=>this.options.indexOf(item)));
+          }else {
+            this.hoverIndex = -1;
+          }
+        }
+      },300)
+    },
+    handleOptionSelect(option,byClick) {
+      if(this.multiple) {
+        const value = (this.value ||[]).slice();
+        const optionIndex = this.getValueIndex(value,option.value);
+        if(optionIndex>-1) {
+          value.splice(optionIndex,1);
+        }else if(this.multipleLimit <= 0 || value.length < this.multipleLimit) {
+          value.push(option.value);
+        }
+        this.$emit('input',value);
+        this.emitChange(value);
+        if(option.created) {
+          this.query = '';
+          this.handleQueryChange('');
+          this.inputLength =20;
+        }
+        if (this.filterable) this.$refs.input.focus();
+      }else {
+        this.$emit('input', option.value);
+        this.emitChange(option.value);
+        this.visible = false;
+      }
+      this.isSilentBlur = byClick;
+      this.setSoftFocus();
+      if (this.visible) return;
+      this.$nextTick(() => {
+        this.scrollToOption(option);
+      });
+    },
+    setSoftFocus() {
+      this.softFocus = true;
+      const input = this.$refs.input || this.$refs.reference;
+      if(input) {
+        input.focus();
+      }
+    },
+    getValueIndex(arr =[],value) {
+      const isObject = Object.prototype.toString.call(value).toLowerCase() === '[object object]';
+      if (!isObject) {
+        return arr.indexOf(value);
+      } else {
+        const valueKey = this.valueKey;
+        let index = -1;
+        arr.some((item, i) => {
+          if (getValueByPath(item, valueKey) === getValueByPath(value, valueKey)) {
+            index = i;
+            return true;
+          }
+          return false;
+        });
+        return index;
+      }
+    },
+    toggleMenu() {
+      if (!this.selectDisabled) {
+        if (this.menuVisibleOnFocus) {
+          this.menuVisibleOnFocus = false;
+        } else {
+          this.visible = !this.visible;
+        }
+        if (this.visible) {
+          (this.$refs.input || this.$refs.reference).focus();
+        }
+      }
+    },
+    selectOption() {
+      if (!this.visible) {
+        this.toggleMenu();
+      } else {
+        if (this.options[this.hoverIndex]) {
+          this.handleOptionSelect(this.options[this.hoverIndex]);
+        }
+      }
+    },
+    deleteSelected(event) {
+      event.stopPropagation();
+      const value = this.multiple ? [] : '';
+      this.$emit('input', value);
+      this.emitChange(value);
+      this.visible = false;
+      this.$emit('clear');
+    },
+    deleteTag(event, tag) {
+      let index = this.selected.indexOf(tag);
+      if (index > -1 && !this.selectDisabled) {
+        const value = this.value.slice();
+        value.splice(index, 1);
+        this.$emit('input', value);
+        this.emitChange(value);
+        this.$emit('remove-tag', tag.value);
+      }
+      event.stopPropagation();
+    },
+    onInputChange() {
+      if (this.filterable && this.query !== this.selectedLabel) {
+        this.query = this.selectedLabel;
+        this.handleQueryChange(this.query);
+      }
+    },
+    onOptionDestroy(index) {
+      if (index > -1) {
+        this.optionsCount--;
+        this.filteredOptionsCount--;
+        this.options.splice(index, 1);
+      }
+    },
+
+    resetInputWidth() {
+      this.inputWidth = this.$refs.reference.$el.getBoundingClientRect().width;
+    },
+
+    handleResize() {
+      this.resetInputWidth();
+      if (this.multiple) this.resetInputHeight();
+    },
+
+    checkDefaultFirstOption() {
+      this.hoverIndex = -1;
+      let hasCreated = false;
+      for(let i=this.options.length-1;i>=0;i--) {
+        if(this.options[i].created) {
+          hasCreated = true;
+          this.hoverIndex =i;
+          break;
+        }
+      }
+      if(hasCreated) return;
+      for(let i=0;i!==this.options.length;++i) {
+        const options = this.options[i];
+        if(this.query) {
+          if(!option.disabled && !options.groupDisabled&&option.visible) {
+            this.hoverIndex =i;
+            break;
+          }
+        }else {
+          if(option.itemSelected) {
+            this.hoverIndex =i;
+            break;
+          }
+        }
+      }
+    },
     getValueKey(item) {
-      if (
-        Object.prototype.toString.call(item.value).toLowerCase() !==
-        "[object object]"
-      ) {
+      if (Object.prototype.toString.call(item.value).toLowerCase() !== '[object object]') {
         return item.value;
       } else {
         return getValueByPath(item.value, this.valueKey);
       }
     },
-    handleFocus() {
-
-    },
-    managePlaceholder() {},
-    resetInputState() {},
-    selectOption(){},
-    deletePrevTag() {},
-    handleComposition() {},
-    debouncedQueryChange() {}
   },
   created() {
     console.log("multiple", this.multiple);
+    this.cachedPlaceHolder = this.currentPlaceholder = this.placeholder;
+    if(this.multiple && !Array.isArray(this.value)) {
+      this.$emit('input',[]);
+    }
+    if (!this.multiple && Array.isArray(this.value)) {
+      this.$emit('input', '');
+    }
+    this.debouncedOnInputChange = debounce(this.debounce, () => {
+        this.onInputChange();
+      });
+
+    this.debouncedQueryChange = debounce(this.debounce, (e) => {
+      this.handleQueryChange(e.target.value);
+    });
+
+    this.$on('handleOptionClick', this.handleOptionSelect);
+    this.$on('setSelected', this.setSelected);
+  },
+  mounted() {
+    if(this.multiple && Array.isArray(this.value)&&this.value.length>0) {
+      this.currentPlaceholder='';
+    }
+    addResizeListener(this.$el,this.handleResize);
+    const reference = this.$refs.reference;
+    if (reference && reference.$el) {
+      const sizeMap = {
+        medium: 36,
+        small: 32,
+        mini: 28
+      };
+      const input = reference.$el.querySelector('input');
+      this.initialInputHeight = input.getBoundingClientRect().height || sizeMap[this.selectSize];
+      if (this.remote && this.multiple) {
+        this.resetInputHeight();
+      }
+      this.$nextTick(() => {
+        if (reference && reference.$el) {
+          this.inputWidth = reference.$el.getBoundingClientRect().width;
+        }
+      });
+      this.setSelected();
+    }
+  },
+  beforeDestroy() {
+    if (this.$el && this.handleResize) removeResizeListener(this.$el, this.handleResize);
   }
 };
 </script>
