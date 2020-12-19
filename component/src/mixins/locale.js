@@ -1,4 +1,4 @@
-import {t} from ''
+import { t } from "../locale";
 export default {
   methods: {
     t(...args) {
