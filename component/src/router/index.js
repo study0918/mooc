@@ -4,6 +4,7 @@ import message from "../examples/message.vue";
 import input from "../examples/input.vue";
 import card from "../examples/card.vue";
 import clickoutside from "../examples/clickoutside.vue";
+import attrs from "../examples/attrs/father.vue";
 
 Vue.use(Router);
 
@@ -28,6 +29,11 @@ export default new Router({
       path: "/clickoutside",
       name: "clickoutside",
       component: clickoutside
+    },
+    {
+      path: "/attrs",
+      name: "attrs",
+      component: attrs
     }
   ]
 });
