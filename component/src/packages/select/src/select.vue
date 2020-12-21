@@ -505,12 +505,11 @@ export default {
         }else {
           this.createdSelected = false;
         }
+        this.selectedLabel = option.currentLabel;
+        this.selected = option;
+        if (this.filterable) this.query = this.selectedLabel;
+        return;
       }
-      this.selectedLabel = option.currentLabel;
-
-      this.selected = option;
-      if (this.filterable) this.query = this.selectedLabel;
-      return;
       let result = [];
       if (Array.isArray(this.value)) {
         this.value.forEach(value => {
