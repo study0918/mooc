@@ -49,7 +49,9 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')],
+        // https://github.com/ElemeFE/element/issues/11653
+        exclude:['../src/utils/vue-popper.js']
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
