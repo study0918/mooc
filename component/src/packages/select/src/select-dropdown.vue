@@ -7,7 +7,7 @@
     <slot></slot>
   </div>
 </template>
-<script type="text/babel">
+<script type="text/javascript">
 import Popper from "../../../utils/vue-popper";
 export default {
   name: "ElSelectDropdown",
