@@ -11,6 +11,8 @@
 </template>
 
 <script>
+// https://blog.csdn.net/weixin_30394669/article/details/99592111
+// http://t.zoukankan.com/lymconch-p-13267147.html
 import iframeTab from "./iframe.vue";
 export default {
   name: "show",
