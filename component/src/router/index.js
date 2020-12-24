@@ -5,6 +5,8 @@ import input from "../examples/input.vue";
 import card from "../examples/card.vue";
 import clickoutside from "../examples/clickoutside.vue";
 import attrs from "../examples/attrs/father.vue";
+import iframe from "../examples/iframe/demo3.vue";
+import childIframe from "../examples/iframe/childIframe";
 
 Vue.use(Router);
 
@@ -34,6 +36,16 @@ export default new Router({
       path: "/attrs",
       name: "attrs",
       component: attrs
+    },
+    {
+      path: "/iframe",
+      name: "iframe",
+      component: iframe
+    },
+    {
+      path: "/childIframe",
+      name: "childIframe",
+      component: childIframe
     }
   ]
 });
