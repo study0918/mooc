@@ -38,8 +38,11 @@ export default {
     receiveMsg() {
       window.addEventListener(
         "message",
-        function(event) {
-          console.log(event);
+        // function(event) {
+        //   console.log(event);
+        // },
+        ({data,origin}) => {
+          console.log('data',data)
         },
         false
       );
