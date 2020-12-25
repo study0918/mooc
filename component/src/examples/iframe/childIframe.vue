@@ -20,14 +20,15 @@ export default {
       window.parent.postMessage(type, targetOrigin);
     },
     receiveMsg() {
+      let vm = this;
       window.addEventListener(
         "message",
         function(event) {
           // 通过origin属性判断消息来源地址
           // if (event.origin == 'localhost') {
           console.log(event);
-          // this.data = event.data;
-          // this.origin = event.origin;
+          vm.data = event.data;
+          vm.origin = event.origin;
           //console.log(event.source);
           //}
         },
