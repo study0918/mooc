@@ -1,24 +1,21 @@
-// https://segmentfault.com/a/1190000014213030?utm_source=index-hottest
-import Vue from "vue";
-import { on } from "./dom";
+import Vue from 'vue';
+import { on } from 'element-ui/src/utils/dom';
 
 const nodeList = [];
-const ctx = "@@clickoutsideContext";
+const ctx = '@@clickoutsideContext';
 
 let startClick;
 let seed = 0;
 
-!Vue.prototype.$isServer && on(document, "mousedown", e => (startClick = e));
+!Vue.prototype.$isServer && on(document, 'mousedown', e => (startClick = e));
 
-!Vue.prototype.$isServer &&
-  on(document, "mouseup", e => {
-    nodeList.forEach(node => node[ctx].documentHandler(e, startClick));
-  });
+!Vue.prototype.$isServer && on(document, 'mouseup', e => {
+  nodeList.forEach(node => node[ctx].documentHandler(e, startClick));
+});
 
 function createDocumentHandler(el, binding, vnode) {
   return function(mouseup = {}, mousedown = {}) {
-    if (
-      !vnode ||
+    if (!vnode ||
       !vnode.context ||
       !mouseup.target ||
       !mousedown.target ||
@@ -26,16 +23,12 @@ function createDocumentHandler(el, binding, vnode) {
       el.contains(mousedown.target) ||
       el === mouseup.target ||
       (vnode.context.popperElm &&
-        (vnode.context.popperElm.contains(mouseup.target) ||
-          vnode.context.popperElm.contains(mousedown.target)))
-    )
-      return;
+      (vnode.context.popperElm.contains(mouseup.target) ||
+      vnode.context.popperElm.contains(mousedown.target)))) return;
 
-    if (
-      binding.expression &&
+    if (binding.expression &&
       el[ctx].methodName &&
-      vnode.context[el[ctx].methodName]
-    ) {
+      vnode.context[el[ctx].methodName]) {
       vnode.context[el[ctx].methodName]();
     } else {
       el[ctx].bindingFn && el[ctx].bindingFn();

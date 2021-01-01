@@ -1,5 +1,11 @@
-/build/
-/config/
-/dist/
-/src/
-/*.js
+src/utils/popper.js
+src/utils/date.js
+examples/play
+*.sh
+node_modules
+lib
+coverage
+*.md
+*.scss
+*.woff
+*.ttf

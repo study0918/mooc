@@ -1,4 +1,5 @@
-import { t } from "../locale";
+import { t } from 'element-ui/src/locale';
+
 export default {
   methods: {
     t(...args) {

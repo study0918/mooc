@@ -1,8 +1,8 @@
-import Vue from "vue";
-import merge from "../merge";
-import PopupManager from "./popup-manager";
-import getScrollBarWidth from "../scrollbar-width";
-import { getStyle, addClass, removeClass, hasClass } from "../dom";
+import Vue from 'vue';
+import merge from 'element-ui/src/utils/merge';
+import PopupManager from 'element-ui/src/utils/popup/popup-manager';
+import getScrollBarWidth from '../scrollbar-width';
+import { getStyle, addClass, removeClass, hasClass } from '../dom';
 
 let idSeed = 1;
 
@@ -43,15 +43,19 @@ export default {
       default: false
     }
   },
+
   beforeMount() {
-    this._popupId = "popup-" + idSeed++;
+    this._popupId = 'popup-' + idSeed++;
     PopupManager.register(this._popupId, this);
   },
+
   beforeDestroy() {
     PopupManager.deregister(this._popupId);
     PopupManager.closeModal(this._popupId);
+
     this.restoreBodyStyle();
   },
+
   data() {
     return {
       opened: false,
@@ -61,6 +65,7 @@ export default {
       rendered: false
     };
   },
+
   watch: {
     visible(val) {
       if (val) {
@@ -78,17 +83,21 @@ export default {
       }
     }
   },
+
   methods: {
     open(options) {
       if (!this.rendered) {
         this.rendered = true;
       }
+
       const props = merge({}, this.$props || this, options);
+
       if (this._closeTimer) {
         clearTimeout(this._closeTimer);
         this._closeTimer = null;
       }
       clearTimeout(this._openTimer);
+
       const openDelay = Number(props.openDelay);
       if (openDelay > 0) {
         this._openTimer = setTimeout(() => {
@@ -99,54 +108,47 @@ export default {
         this.doOpen(props);
       }
     },
+
     doOpen(props) {
       if (this.$isServer) return;
       if (this.willOpen && !this.willOpen()) return;
       if (this.opened) return;
+
       this._opening = true;
+
       const dom = this.$el;
+
       const modal = props.modal;
+
+      const zIndex = props.zIndex;
+      if (zIndex) {
+        PopupManager.zIndex = zIndex;
+      }
+
       if (modal) {
         if (this._closing) {
           PopupManager.closeModal(this._popupId);
           this._closing = false;
         }
-        PopupManager.openModal(
-          this._popupId,
-          PopupManager.nextZIndex(),
-          this.modalAppendToBody ? undefined : dom,
-          props.modalClass,
-          props.modalFade
-        );
+        PopupManager.openModal(this._popupId, PopupManager.nextZIndex(), this.modalAppendToBody ? undefined : dom, props.modalClass, props.modalFade);
         if (props.lockScroll) {
-          this.withoutHiddenClass = !hasClass(
-            document.body,
-            "el-popup-parent--hidden"
-          );
+          this.withoutHiddenClass = !hasClass(document.body, 'el-popup-parent--hidden');
           if (this.withoutHiddenClass) {
             this.bodyPaddingRight = document.body.style.paddingRight;
-            this.computedBodyPaddingRight = parseInt(
-              getStyle(document.body, "paddingRight"),
-              10
-            );
+            this.computedBodyPaddingRight = parseInt(getStyle(document.body, 'paddingRight'), 10);
           }
           scrollBarWidth = getScrollBarWidth();
-          let bodyHasOverflow =
-            document.documentElement.clientHeight < document.body.scrollHeight;
-          let bodyOverflowY = getStyle(document.body, "overflowY");
-          if (
-            scrollBarWidth > 0 &&
-            (bodyHasOverflow || bodyOverflowY === "scroll") &&
-            this.withoutHiddenClass
-          ) {
-            document.body.style.paddingRight =
-              this.computedBodyPaddingRight + scrollBarWidth + "px";
+          let bodyHasOverflow = document.documentElement.clientHeight < document.body.scrollHeight;
+          let bodyOverflowY = getStyle(document.body, 'overflowY');
+          if (scrollBarWidth > 0 && (bodyHasOverflow || bodyOverflowY === 'scroll') && this.withoutHiddenClass) {
+            document.body.style.paddingRight = this.computedBodyPaddingRight + scrollBarWidth + 'px';
           }
-          addClass(document.body, "el-popup-parent--hidden");
+          addClass(document.body, 'el-popup-parent--hidden');
         }
       }
-      if (getComputedStyle(dom).position === "static") {
-        dom.style.position = "absolute";
+
+      if (getComputedStyle(dom).position === 'static') {
+        dom.style.position = 'absolute';
       }
 
       dom.style.zIndex = PopupManager.nextZIndex();
@@ -204,11 +206,13 @@ export default {
     restoreBodyStyle() {
       if (this.modal && this.withoutHiddenClass) {
         document.body.style.paddingRight = this.bodyPaddingRight;
-        removeClass(document.body, "el-popup-parent--hidden");
+        removeClass(document.body, 'el-popup-parent--hidden');
       }
       this.withoutHiddenClass = true;
     }
   }
 };
 
-export { PopupManager };
+export {
+  PopupManager
+};
