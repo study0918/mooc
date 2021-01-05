@@ -1,14 +1,12 @@
 <template>
   <div style="margin: 20px;">
-    <el-select v-model="value" placeholder="请选择">
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      >
-      </el-option>
-    </el-select>
+    <el-checkbox-group v-model="checkList">
+      <el-checkbox label="复选框 A"></el-checkbox>
+      <el-checkbox label="复选框 B"></el-checkbox>
+      <el-checkbox label="复选框 C"></el-checkbox>
+      <el-checkbox label="禁用" disabled></el-checkbox>
+      <el-checkbox label="选中且禁用" disabled></el-checkbox>
+    </el-checkbox-group>
   </div>
 </template>
 
@@ -16,30 +14,11 @@
 export default {
   data() {
     return {
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
-      value: "",
+      checkList: ["选中且禁用", "复选框 A"],
     };
+  },
+  mounted() {
+    console.log("this", this);
   },
 };
 </script>
