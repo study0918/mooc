@@ -1,9 +1,7 @@
 function generateRandomArr(len) {
     const arr = new Array(len)
     arr.fill()
-    return arr.map(()=>{
-        Math.round(Math.random()*100)
-    })
+      return arr.map(()=>Math.round(Math.random()*100))
 }
 
 function reFlatten() {
@@ -14,6 +12,7 @@ function reFlatten() {
     for(let i=0;i<arr.length;i++) {
         const n= Math.floor(arr[i]/10);
         sortArr[n] = sortArr[n] ||[];
-        sortArr(n).push(arr[i])
+        sortArr[n].push(arr[i])
     }
+    return sortArr.filter(item=>item)
 }
