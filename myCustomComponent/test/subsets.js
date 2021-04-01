@@ -4,9 +4,9 @@ function subsets(nums) {
         let len = res.length;
         for (let j = 0; j < len; j++) {
             res.push([...res[j], nums[i]]);
+            console.log('res',res)
         }
     }
-    console.log('res',res)
     return res;
 }
 

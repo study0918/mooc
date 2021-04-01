@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+  <button onclick="filerNode([1,2,3])">
+    子集
+  </button>
+  <p id="demo"></p>
+  <script>
+    var menu = [
+      1, 2, 3
+    ];
+    var filerNode = function (nums) {
+      let res = [
+        []
+      ];
+      for (let i = 0; i < nums.length; i++) {
+        let len = res.length;
+        for (let j = 0; j < len; j++) {
+          console.log('i', i)
+          res.push([...res[j], nums[i]]);
+          console.log('res', res)
+        }
+      }
+      return res;
+    };
+
+  </script>
+</body>
+
+</html>
