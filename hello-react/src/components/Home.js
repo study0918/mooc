@@ -20,6 +20,9 @@ export class Home extends Component {
             age:this.state.age+3
         })
     }
+    handleGreet() {
+        this.props.greet(this.state.age)
+    }
     render() {
         console.log('this',this)
         return (
@@ -30,6 +33,8 @@ export class Home extends Component {
                             <p>{this.state.status}</p>
                         {/* ()代表执行，这里需要的是一个函数，所以不需要括号 */}
                         <button onClick={()=>{this.onMakeOlder()}} className="btn btn-primary">Make me older</button>
+                         <hr/>
+                         <button onClick={this.handleGreet.bind(this)} className="btn btn-primary">Greet</button>
                     </div>
                 </div>
             </div>
@@ -43,6 +48,5 @@ Home.propTypes = {
     user: PropTypes.object,
     greet: PropTypes.func,
     initialName: PropTypes.string,
-    children:PropTypes.element.isRequired
   };
   
