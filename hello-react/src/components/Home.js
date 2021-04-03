@@ -7,7 +7,8 @@ export class Home extends Component {
         super(props);// 执行父类的构造方法
         this.state = {
             age:props.initialAge,
-            status:0
+            status:0,
+            homeLink:"Changed Link"
         }
         setTimeout(()=>{
             this.setState({
@@ -23,6 +24,9 @@ export class Home extends Component {
     handleGreet() {
         this.props.greet(this.state.age)
     }
+    onChangeLink() {
+        this.props.changeLink(this.state.homeLink);
+      }
     render() {
         console.log('this',this)
         return (
@@ -35,6 +39,8 @@ export class Home extends Component {
                         <button onClick={()=>{this.onMakeOlder()}} className="btn btn-primary">Make me older</button>
                          <hr/>
                          <button onClick={this.handleGreet.bind(this)} className="btn btn-primary">Greet</button>
+                         <hr/>
+                         <button onClick={this.onChangeLink.bind(this)} className="btn btn-primary">Change Header</button>
                     </div>
                 </div>
             </div>
