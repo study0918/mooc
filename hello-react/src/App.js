@@ -1,4 +1,4 @@
-import React,{Component, component} from 'react';
+import React,{Component} from 'react';
 import {Header} from './components/Header'
 import {Home} from './components/Home'
 class App extends Component {
@@ -36,7 +36,7 @@ class App extends Component {
         </div>
         <div className="row">
           <div className="col-xs-1 col-xs-offset-11">
-            <Home name={"Max"} initialAge={12} user={user} greet={this.onGreet} changeLink={this.onChangeLinkName.bind(this)}/>
+            <Home name={"Max"} initialAge={12} user={user} greet={this.onGreet} changeLink={this.onChangeLinkName.bind(this)} initialName={this.state.homeLink}/>
           </div>
         </div>
       </div>

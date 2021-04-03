@@ -8,7 +8,7 @@ export class Home extends Component {
         this.state = {
             age:props.initialAge,
             status:0,
-            homeLink:"Changed Link"
+            homeLink:props.initialName
         }
         setTimeout(()=>{
             this.setState({
@@ -26,9 +26,14 @@ export class Home extends Component {
     }
     onChangeLink() {
         this.props.changeLink(this.state.homeLink);
-      }
+    }
+    onHandleChange(event) {
+        console.log(event.target.value)
+        this.setState({
+            homeLink:event.target.value
+        })
+    }
     render() {
-        console.log('this',this)
         return (
             <div className="container">
                 <div className="row">
@@ -40,6 +45,7 @@ export class Home extends Component {
                          <hr/>
                          <button onClick={this.handleGreet.bind(this)} className="btn btn-primary">Greet</button>
                          <hr/>
+                         <input type="" value={this.state.initialName} onChange={event=>{this.onHandleChange(event)}} defaultValue={this.props.initialName}/>
                          <button onClick={this.onChangeLink.bind(this)} className="btn btn-primary">Change Header</button>
                     </div>
                 </div>
