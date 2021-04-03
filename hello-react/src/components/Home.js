@@ -15,6 +15,7 @@ export class Home extends Component {
                 status:1
             })
         },3000)
+         console.log('Constructor');
     }
     onMakeOlder() {
         this.setState({
@@ -33,6 +34,40 @@ export class Home extends Component {
             homeLink:event.target.value
         })
     }
+     //第一类方法
+  componentWillMount() {
+    console.log("Component will mount");
+  }
+
+  componentDidMount() {
+    console.log("Component did mount");
+  }
+
+  //第二类方法
+  componentWillReceiveProps(nextProps) {
+    console.log("Component will receive props", nextProps);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("Component should update", nextProps, nextState);
+    if(nextState.status===1){
+        return false
+    }
+    return true;
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    console.log("Component will update", nextProps, nextState);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log("Component did update", prevProps, prevState);
+  }
+
+  //第三类方法
+  componentWillUnmount() {
+    console.log("Component will unmount");
+  }
     render() {
         return (
             <div className="container">
