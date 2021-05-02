@@ -1,32 +1,57 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
 import { Input, Button, List } from "antd";
-
-const data = [
-  "早8点开晨会，分配今天的代码任务",
-  "早9点和项目经理开需求沟通会",
-  "早9点和项目经理开需求沟通会",
-];
+import store from "./store";
 class TodoList extends Component {
+  constructor(props) {
+    super(props);
+    console.log("store", store);
+    this.state = store.getState();
+    // console.log("state", this.state);
+    this.changeInputValue = this.changeInputValue.bind(this);
+    this.storeChange = this.storeChange.bind(this);
+    this.clickBtn = this.clickBtn.bind(this);
+    store.subscribe(this.storeChange);
+  }
   render() {
     return (
       <div style={{ margin: "10px" }}>
         <div>
           <Input
-            placeholder="Write Something"
-            style={{ width: "250px" }}
+            placeholder={this.state.inputValue}
+            style={{ width: "250px", marginRight: "10px" }}
+            onChange={this.changeInputValue}
+            value={this.state.inputValue}
           ></Input>
-          <Button type="primary">增加</Button>
+          <Button type="primary" onClick={this.clickBtn}>
+            增加
+          </Button>
         </div>
         <div style={{ margin: "10px", width: "300px" }}>
           <List
             bordered
-            dataSource={data}
+            dataSource={this.state.list}
             renderItem={(item) => <List.Item>{item}</List.Item>}
           ></List>
         </div>
       </div>
     );
+  }
+  changeInputValue(e) {
+    const action = {
+      type: "changeInput",
+      value: e.target.value,
+    };
+    store.dispatch(action);
+  }
+  storeChange() {
+    this.setState(store.getState());
+  }
+  clickBtn() {
+    const action = {
+      type: "addItem",
+    };
+    store.dispatch(action);
   }
 }
 
