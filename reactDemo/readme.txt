@@ -10,3 +10,5 @@
 8.1)store必须是唯一的，多个store是坚决不允许的，只能有一个store空间
 2）只有store能改变自己的内容，Reducer不能改变
 3）Reducer必须是纯函数
+
+9.easy mock  study0918 lixiang19901104
