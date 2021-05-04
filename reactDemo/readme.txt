@@ -12,3 +12,4 @@
 3）Reducer必须是纯函数
 
 9.easy mock  study0918 lixiang19901104
+10.useEffect是异步的,不会阻止视图的更新
