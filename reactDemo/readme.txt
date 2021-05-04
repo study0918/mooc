@@ -13,3 +13,7 @@
 
 9.easy mock  study0918 lixiang19901104
 10.useEffect是异步的,不会阻止视图的更新,没有componentShouldUpdate的生命周期，父组件的状态更新后，子组件的状态不需要更新，但子组件的方法却要再执行一遍，会消耗性能
+
+11.自定义hooks函数必须以use开头
+
+12.useCallback缓存方法,useMemo缓存状态或者属性
