@@ -9,6 +9,9 @@
 2.cd server
 安装express cnpm i express@next mongoose cors
 
+前后端服务需要同时启动
+前端：cd admin yarn serve
+后端：cd server yarn serve
 mongoDB安装教程https://www.runoob.com/mongodb/mongodb-window-install.html
 
 mongod --dbpath D:\data\db
