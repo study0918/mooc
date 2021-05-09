@@ -4,3 +4,4 @@
 全局安转nodemon npm i -g nodemon
 安装elementUI  vue add element
 启动服务 cd admin yarn serve
+添加路由 vue add router
