@@ -9,7 +9,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="用户名">
-        <el-input v-model="model.username"></el-input>
+        <el-input v-model="model.name"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" native-type="submit">保存</el-button>
@@ -33,9 +33,9 @@ export default {
     async save(){
       let res
       if(this.id) {
-        res = await this.$http.put(`/categories/${this.id}`, this.model)
+        res = await this.$http.put(`rest/categories/${this.id}`, this.model)
       }else {
-        res = await this.$http.post('/categories', this.model)
+        res = await this.$http.post('rest/categories', this.model)
       }
       console.log('res',res)
       this.$router.push('/categories/list')
@@ -45,11 +45,11 @@ export default {
       })
     },
     async fetch(){
-      const res = await this.$http.get(`categories/${this.id}`)
+      const res = await this.$http.get(`rest/categories/${this.id}`)
       this.model = res.data
     },
     async fetchParents(){
-      const res = await this.$http.get(`categories`)
+      const res = await this.$http.get(`rest/categories`)
       this.parents = res.data
     },
   },

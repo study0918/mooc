@@ -25,3 +25,6 @@ mongod --dbpath D:\data\db
 
 进入D:\Program Files\MongoDB\Server\4.4\bin执行mongo
 
+3.处理单复数的转换
+cnpm i inflection
+
