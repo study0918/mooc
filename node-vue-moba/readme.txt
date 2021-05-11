@@ -1,3 +1,4 @@
+B站地址: https://www.bilibili.com/video/BV1A4411Y7fi?p=12
 1.创建服务端mkdir server,初始化npm init -y
 创建web端 vue create admin 选默认
 安装vue/cli  npm i -g @vue/cli
