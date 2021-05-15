@@ -36,4 +36,18 @@ module.exports  = app =>{
         req.Model = require(`../../models/${modelName}`)
         next()
     },router)
+
+    // 引入multer
+    const multer = require('multer')
+    // 定义上传中间件,传递一个地址并执行它
+    const upload = multer({
+        dest: __dirname + '/../../uploads',
+    })
+    // single单个文件,file是formData的名称
+    app.post('/admin/api/upload',upload.single('file'),async(req,res)=>{
+        // express本身无法获取上传文件的数据，因此需要一个中间件专门来处理上传数据 multer
+        const file = req.file;
+        file.url = `http://localhost:3000/uploads/${file.filename}`
+        res.send(file)
+    })
 }
