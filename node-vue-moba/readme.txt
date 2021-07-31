@@ -29,3 +29,6 @@ mongod --dbpath D:\data\db
 3.处理单复数的转换
 cnpm i inflection
 
+4.密码散列
+
+npm i bcrypt

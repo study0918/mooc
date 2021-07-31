@@ -1,5 +1,6 @@
 module.exports  = app =>{
     const express = require('express');
+    const jwt = require('jsonwebtoken')
     //需要用到express的子路由时使用
     const router = express.Router({ mergeParams: true});
     router.post('/',async(req,res)=>{
@@ -49,5 +50,19 @@ module.exports  = app =>{
         const file = req.file;
         file.url = `http://localhost:3000/uploads/${file.filename}`
         res.send(file)
+    })
+
+    app.post('/admin/api/login', async (req, res) => {
+        const { username, password } = req.body
+        // 1.根据用户名找用户
+    
+        const user = await AdminUser.findOne({ username }).select('+password')
+        assert(user, 422, '用户不存在')
+        // 2.校验密码
+        const isValid = require('bcrypt').compareSync(password, user.password)
+        assert(isValid, 422, '密码错误')
+        // 3.返回token
+        const token = jwt.sign({ id: user._id }, app.get('secret'))
+        res.send({ token })
     })
 }
