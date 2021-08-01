@@ -32,3 +32,6 @@ cnpm i inflection
 4.密码散列
 
 npm i bcrypt
+
+5.处理错误中间件
+npm install http-assert
