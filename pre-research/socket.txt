@@ -1,3 +1,13 @@
 https://juejin.cn/post/6844903477596913677
 
 https://juejin.cn/post/6844903558848970760
+
+视频会议系统：
+全部项目：
+https://github.com/topics/socket-io?l=vue
+符合我们的
+文章地址：https://mp.weixin.qq.com/s/eAOKMkV7bLAjESZkIft8kQ
+前端：
+https://github.com/wangsrGit119/suc-love-chat
+后端：
+https://github.com/wangsrGit119/suc-chat-bandend
