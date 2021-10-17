@@ -29,3 +29,10 @@ https://github.com/ridesky/my_ydig
 https://github.com/dougiefresh49/vue-meetup-socket-client
 
 https://github.com/TeemoPeng/whiteboard
+
+https://github.com/Angellikefairy/AngelChating
+
+分片上传：https://www.cnblogs.com/xiahj/p/vue-simple-uploader.html
+
+socket.io官方文档：https://github.com/MetinSeylan/Vue-Socket.io
+https://copyfuture.com/blogs-details/20200302172453113w6deo7teqwjol74
