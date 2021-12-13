@@ -14,3 +14,9 @@ npm install --save koa-bodyparser@3
 
 安装koa-router
 npm install --save koa-router
+
+安装koa-views
+npm install --save koa-views
+
+安装koa-static
+npm install --save koa-static
